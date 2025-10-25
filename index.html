@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Could You Survive a Mildly Inconvenient Apocalypse?</title>
+<style>
+:root{
+  --bg:#0D1B2A;
+  --card:#101E33;
+  --text:#F4F4F4;
+  --muted:#A9B0C7;
+  --accent:#E2B14A;     /* warmer soft gold */
+  --accent2:#C98B28;    /* rich amber */
+  --heading:#C4453F;
+  --espresso:#2b1a00;   /* text on gold */
+}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:linear-gradient(180deg,#0D1B2A,#0A1626 60%,#091521);
+  color:var(--text);
+}
+.wrap{max-width:940px;margin:40px auto;padding:0 20px}
+header{text-align:center;margin-bottom:20px}
+.title{
+  font-size:clamp(1.8rem,2.6vw + 1rem,2.6rem);
+  font-weight:900;text-transform:uppercase;
+  color:var(--heading);text-shadow:0 2px 0 rgba(0,0,0,.25);margin:0;
+}
+.sub{color:var(--muted);margin:6px 0 0;font-size:clamp(1rem,0.8vw + 0.9rem,1.15rem)}
+.subspace{margin-bottom:1.5em}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:20px;padding:22px;
+  box-shadow:0 16px 44px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+}
+.controls{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px}
+button{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:var(--espresso);border:none;border-radius:14px;padding:12px 18px;
+  font-weight:800;cursor:pointer;letter-spacing:.2px;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+  transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+button:hover{transform:translateY(-1px);filter:brightness(1.03);box-shadow:0 10px 24px rgba(0,0,0,.4);}
+button.secondary{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,.18);box-shadow:none}
+button:disabled{opacity:.45;cursor:not-allowed}
+.qnum{color:var(--muted);font-weight:600;letter-spacing:.04em}
+.question{font-size:1.15rem;margin:10px 0 14px}
+.answers{display:grid;gap:10px}
+.answer{
+  background:#0E2032;border:1px solid rgba(255,255,255,.10);
+  padding:14px;border-radius:12px;cursor:pointer;
+  transition:transform .05s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease;
+}
+.answer:hover{
+  transform:translateY(-1px);
+  border-color:rgba(226,177,74,.55);
+  box-shadow:0 0 0 2px rgba(226,177,74,.22) inset,0 8px 22px rgba(0,0,0,.35);
+}
+.answer.selected{
+  background:#10273D;
+  border-color:rgba(226,177,74,.85);
+  box-shadow:0 0 0 2px rgba(226,177,74,.35) inset,0 10px 26px rgba(0,0,0,.45);
+}
+.sparkle{color:var(--accent2);margin-right:8px;font-weight:900}
+.progress{height:10px;background:#0A1A2A;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .35s ease}
+.result{display:none}
+.buckets{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:14px}
+.bucket{background:#0E2032;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px}
+.preorder-buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.preorder-buttons a,
+.preorder-buttons a:visited,
+.preorder-buttons a:hover,
+.preorder-buttons a:active {
+  display:inline-block;position:relative;padding:12px 18px;border-radius:14px;text-decoration:none;
+  color:var(--espresso)!important;font-weight:800;letter-spacing:.2px;
+  border:1px solid rgba(201,139,40,.5);
+  background:linear-gradient(180deg,var(--accent),var(--accent2));
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+  transition:box-shadow .2s ease,transform .2s ease,filter .2s ease;
+}
+.preorder-buttons a:hover{transform:translateY(-1px);box-shadow:0 0 8px rgba(201,139,40,.45),0 0 14px rgba(201,139,40,.28);filter:brightness(1.03)}
+a,a:visited{color:var(--accent2);text-decoration:underline}
+a:hover{color:var(--accent)}
+</style>
+<!-- THEME OVERRIDE: Hybrid (dark bg) + white cards + TSMSYL brand, Option B + 3 -->
+<style>
+/* Palette tuned to match the IG slide */
+:root{
+  --bg:#0B1724;               /* deep navy page background */
+  --card:#FFFFFF;             /* white cards */
+  --text:#E9EFF6;             /* default light text for dark areas */
+  --muted:#7E8BA1;            /* subdued text on dark */
+  --accent:#F7C948;           /* button gold (primary) */
+  --accent2:#E0B100;          /* button gold (deeper) */
+  --heading:#2B6C88;          /* TSMSYL title blue */
+  --espresso:#111111;         /* near-black text on gold */
+  --ink:#0D1B2A;              /* ink for text on white cards */
+}
+
+/* Keep dark background, but lighten overall feel slightly */
+body{
+  background: radial-gradient(1200px 600px at 50% -150px, #0F2233 0%, var(--bg) 55%, #091521 100%);
+  color: var(--text);
+}
+
+/* Title + subheads adopt TSMSYL blue + improved contrast on dark */
+.title{ color: var(--heading); text-shadow: 0 2px 0 rgba(0,0,0,.25); }
+.sub{ color: var(--muted); }
+
+/* Cards flip to white; text becomes dark ink for readability */
+.card{
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid rgba(13,27,42,.10);
+  box-shadow: 0 16px 44px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.7) inset;
+}
+
+/* Question number on white card should be more muted navy */
+.qnum{ color: #4A5B70; }
+
+/* Answers: default white with dark text; retain colored hover/selected states (Option 3) */
+.answer{
+  background: #FFFFFF;
+  color: var(--ink);
+  border: 1px solid rgba(13,27,42,.14);
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset;
+}
+.answer:hover{
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  color: var(--espresso);
+  border-color: rgba(224,177,0,.65);
+  box-shadow: 0 0 0 2px rgba(247,201,72,.25) inset, 0 8px 18px rgba(0,0,0,.25);
+}
+.answer.selected{
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  color: var(--espresso);
+  border-color: rgba(224,177,0,.85);
+  box-shadow: 0 0 0 2px rgba(247,201,72,.35) inset, 0 10px 22px rgba(0,0,0,.35);
+}
+
+.sparkle{ color: var(--accent2); }
+
+/* Progress bar uses gold on navy track */
+.progress{ background: #0B1C2C; border: 1px solid rgba(255,255,255,.06); }
+.bar{ background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+/* Secondary buttons remain ghost on white; primary keeps gold */
+button.secondary{
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid rgba(13,27,42,.18);
+  box-shadow: none;
+}
+/* Place secondary buttons on dark bg too */
+.result .controls button.secondary{ color: var(--text); border-color: rgba(255,255,255,.25); }
+
+/* Result section: restore dark text in cards; keep accents */
+.result{ color: var(--ink); }
+.result h2, .result h3{ color: var(--heading) !important; }
+.bucket{
+  background: #F7F9FC;
+  color: var(--ink);
+  border: 1px solid rgba(13,27,42,.08);
+}
+.sub{ color: #5B6B82; }
+
+/* Links stay TSMSYL blue/amber for brand cohesion */
+a, a:visited{ color: var(--heading); }
+a:hover{ color: #3484A5; }
+
+/* Preorder buttons already use gold; ensure dark text contrast */
+.preorder-buttons a{ color: var(--espresso) !important; }
+</style>
+<!-- THEME TWEAK 1: Brighter headings/subheads + darker archetype descriptions + darker "Start over" -->
+<style>
+/* Brighter headings + subheadings */
+.title, h2, h3{
+  color: #3EA4C8 !important; /* brighter TSMSYL blue */
+}
+.sub{
+  color: #6C7A92 !important; /* slightly brighter subheading on white */
+}
+
+/* Darker archetype descriptions */
+.bucket div{
+  color: #1A2633 !important; /* dark ink */
+}
+
+/* Darker "Start over" font */
+button.secondary, .result .controls button.secondary{
+  color: #1A2633 !important;
+  border-color: rgba(26,38,51,.35) !important;
+}
+</style>
+
+
+
+<!-- THEME TWEAK 3: Clean background + subtle full-height vignette -->
+<style>
+:root{
+  --bg:#132A40; /* navy shade 1.5 */
+}
+
+/* Clean background with subtle dark vignette at top + bottom */
+body{
+  background:
+    radial-gradient(100% 160% at 50% -20%, rgba(0,0,0,0.28), transparent 60%),
+    radial-gradient(100% 160% at 50% 120%, rgba(0,0,0,0.22), transparent 60%),
+    var(--bg);
+  background-color: var(--bg);
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1 class="title">Could You Survive a Mildly Inconvenient Apocalypse?</h1>
+  <div class="sub">Find Your Inner Survivor</div>
+  <div class="sub subspace">A TSMSYL Quiz</div>
+</header>
+
+<div class="card" id="quiz">
+  <div class="qnum" id="qnum"></div>
+  <div class="question" id="question"></div>
+  <div class="answers" id="answers"></div>
+  <div class="controls">
+    <button class="secondary" id="prev">← Back</button>
+    <div class="progress" style="flex:1"><div class="bar" id="bar"></div></div>
+    <button id="next">Next →</button>
+  </div>
+</div>
+
+<div class="card result" id="result">
+  <h2 style="color:var(--heading)">Your apocalypse archetype</h2>
+  <div id="top"></div>
+  <div class="buckets" id="breakdown"></div>
+  <div class="controls"><button id="restart" class="secondary">Start over</button></div>
+
+  <h3 style="margin-top:30px;color:var(--heading)">📖 Preorder <em>This Story Might Save Your Life</em></h3>
+  <div class="preorder-buttons">
+    <a href="https://www.barnesandnoble.com/w/this-story-might-save-your-life-tiffany-crum/1147242011?ean=9781250395238" target="_blank" rel="noopener">Barnes &amp; Noble</a>
+    <a href="https://bookshop.org/p/books/this-story-might-save-your-life-a-novel-tiffany-crum/f83a8f20e914f0b1?ean=9781250395238&next=t&next=t" target="_blank" rel="noopener">Bookshop</a>
+    <a href="https://www.amazon.com/This-Story-Might-Save-Your/dp/1250395232" target="_blank" rel="noopener">Amazon</a>
+    <a href="https://www.booksamillion.com/p/This-Story-Might-Save-Your/Tiffany-Crum/9781250395238" target="_blank" rel="noopener">Books-A-Million</a>
+    <a href="https://www.waterstones.com/book/this-story-might-save-your-life/tiffany-crum/9781399744683" target="_blank" rel="noopener">Waterstones</a>
+  </div>
+  <p style="margin-top:10px;">Visit <a href="https://tiffanycrum.com" target="_blank" rel="noopener">tiffanycrum.com</a> for more.</p>
+</div>
+</div>
+
+<script>
+// quiz content logic unchanged from previous working version
+const buckets={overthinker:{title:"🧠 The Overthinker",blurb:"You'd survive, technically — though mostly by exhausting every possible outcome before it happens. Your brain is a constant strategy meeting. The apocalypse isn't your biggest threat; it's your tendency to second-guess, overanalyze, and spiral."},golden:{title:"🐶 The Golden Retriever",blurb:"Your optimism is both your greatest strength and your fastest downfall. You're loyal, earnest, and alarmingly likely to thank the apocalypse for “the character development.” You survive through kindness, heart, and pure denial."},podcaster:{title:"🎙️ The Comedy Survival Podcaster",blurb:"You process danger out loud — preferably with a good joke. You survive through banter, misplaced confidence, and unshakable chemistry."},survivor:{title:"🪓 The Actual Survivor",blurb:"You're calm, practical, and weirdly well-prepared. You read the instructions and brought snacks. You survive through competence, composure, and quiet superiority."}};
+const questions=[{q:"🏕 Civilization has collapsed (again), and you and your best friend decide the woods are your only shot at survival. What's your first move?",options:[{text:"Spend an hour ranking survival priorities by hypothetical regret level.",bucket:"overthinker"},{text:"Hum to yourself and assume everything's friendly.",bucket:"golden"},{text:"Turn your panic into banter; it's your favorite coping mechanism.",bucket:"podcaster"},{text:"Find shelter, test the soil, and quietly resent that your friend didn't pack granola.",bucket:"survivor"}]},{q:"🔥 You successfully start a fire! How?",options:[{text:"You studied this on TikTok before the internet went down.",bucket:"overthinker"},{text:"You set your sleeve on fire, but technically that's still a fire. You're fine. Everything's fine.",bucket:"golden"},{text:"One of you sang “We Didn't Start the Fire” until the universe called your bluff.",bucket:"podcaster"},{text:"Friction and focus. Duh.",bucket:"survivor"}]},{q:"💧 You're extremely parched and you come upon a puddle.",options:[{text:"You'd love to, but your anxiety says no.",bucket:"overthinker"},{text:"Whisper “cheers” to the puddle and sip.",bucket:"golden"},{text:"Riff about “nature's cocktails.”",bucket:"podcaster"},{text:"Filter it with a shirt and move on.",bucket:"survivor"}]},{q:"🐍 You hear rustling in the bushes. What's your move?",options:[{text:"Probably nothing. Definitely something. But probably nothing.",bucket:"overthinker"},{text:"Wave politely and introduce yourself.",bucket:"golden"},{text:"It's a good thing you have your sword!",bucket:"podcaster"},{text:"Freeze, listen, then back away slowly.",bucket:"survivor"}]},{q:"🌧 It starts raining and won't stop. Your shelter leaks.",options:[{text:"Spend twenty minutes deciding which leak to prioritize emotionally.",bucket:"overthinker"},{text:"Call it cozy ambiance and curl up in a corner.",bucket:"golden"},{text:"Make “Water we doing here?” and “pour decisions” jokes until one of you starts crying for real.",bucket:"podcaster"},{text:"Reinforce the roof, move supplies, stay dry.",bucket:"survivor"}]},{q:"🚪 You enter a creepy abandoned cabin. A lone rocking chair is moving on its own.",options:[{text:"Nope. Just nope.",bucket:"overthinker"},{text:"Introduce yourselves so the ghost feels included.",bucket:"golden"},{text:"Debate whether it's haunted or just emotionally unstable wood.",bucket:"podcaster"},{text:"Investigate the draft, secure the door, keep watch.",bucket:"survivor"}]},{q:"🧃 You finally make it to civilization but everyone insists it's still 1997.",options:[{text:"Panic. You're not emotionally equipped to relive dial-up, low-rise jeans, and emotional repression.",bucket:"overthinker"},{text:"Throw on some butterfly clips and pretend this was your plan all along.",bucket:"golden"},{text:"Pitch your survival story to MTV's <i>Real World</i> and buy a load of Apple stock. The situation isn't ideal, but at least you have each other.",bucket:"podcaster"},{text:"Blend in, gather intel, and find your way home.",bucket:"survivor"}]}];
+let current=0;const answers=new Map(),shuffled=new Map(),scores={overthinker:0,golden:0,podcaster:0,survivor:0};
+const qnum=document.getElementById("qnum"),question=document.getElementById("question"),answersEl=document.getElementById("answers"),bar=document.getElementById("bar"),prev=document.getElementById("prev"),next=document.getElementById("next"),quiz=document.getElementById("quiz"),result=document.getElementById("result"),topEl=document.getElementById("top"),breakdown=document.getElementById("breakdown"),restart=document.getElementById("restart");
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function updateButtons(){prev.disabled=current===0;next.textContent=current===questions.length-1?"See results →":"Next →";}
+function render(){const q=questions[current];qnum.textContent="Question "+(current+1)+" of "+questions.length;question.textContent=q.q;let opts=shuffled.get(current);if(!opts){opts=shuffle(q.options);shuffled.set(current,opts);}answersEl.innerHTML="";opts.forEach((opt,i)=>{const d=document.createElement("div");d.className="answer";d.innerHTML="<span class='sparkle'>✦</span>"+opt.text;if(answers.get(current)===i)d.classList.add("selected");d.onclick=()=>{answers.set(current,i);document.querySelectorAll(".answer").forEach(x=>x.classList.remove("selected"));d.classList.add("selected");updateButtons();};d.setAttribute("tabindex","0");d.onkeypress=e=>{if(e.key==="Enter"||e.key===" "){d.click();}};answersEl.appendChild(d);});bar.style.width=(current/questions.length*100)+"%";updateButtons();}
+function compute(){for(const k in scores)scores[k]=0;questions.forEach((q,qi)=>{const s=shuffled.get(qi)||q.options;const ci=answers.get(qi);if(ci==null)return;const choice=s[ci];scores[choice.bucket]++;});}
+function showResults(){compute();const e=Object.entries(scores),m=Math.max(...e.map(([_,v])=>v)),w=e.filter(([_,v])=>v===m&&v>0).map(([k])=>k);if(!w.length){topEl.innerHTML="<p>No answers selected. Try again!</p>";}else{const n=w.map(k=>"<strong>"+buckets[k].title+"</strong>").join(" & ");const b=w.map(k=>buckets[k].blurb).join(" ");topEl.innerHTML="<p style='color:var(--accent)'>"+n+"</p><p>"+b+"</p>";}breakdown.innerHTML="";for(const [k,v] of e){const b=document.createElement("div");b.className="bucket";b.innerHTML="<div style='font-weight:800;margin-bottom:6px;color:var(--accent)'>"+buckets[k].title+"</div><div class='sub' style='color:var(--muted)'>"+v+" point"+(v===1?"":"s")+"</div><div style='margin-top:8px;color:#cfd7e6'>"+buckets[k].blurb+"</div>";breakdown.appendChild(b);}quiz.style.display="none";result.style.display="block";bar.style.width="100%";}
+prev.onclick=()=>{if(current>0){current--;render();}};next.onclick=()=>{if(current<questions.length-1){current++;render();}else{showResults();}};restart.onclick=()=>{current=0;answers.clear();shuffled.clear();quiz.style.display="block";result.style.display="none";render();};
+render();
+</script>
+</body>
+</html>
